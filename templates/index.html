@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Smart Classroom Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+            color: #222;
+        }
+        header {
+            background: #17202a;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+        .card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        }
+        input, button {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        input {
+            width: 70%;
+        }
+        button {
+            cursor: pointer;
+            background: #17202a;
+            color: white;
+        }
+        #chatBox {
+            min-height: 80px;
+            padding: 12px;
+            background: #f1f3f5;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        video {
+            width: 100%;
+            max-width: 520px;
+            border-radius: 12px;
+            background: black;
+        }
+        #result {
+            font-weight: bold;
+            margin-top: 12px;
+        }
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .module {
+            padding: 16px;
+            background: #eef1f4;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>AI Smart Classroom Assistant</h1>
+    <p>CV + NLP + CN + CC</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Project Modules</h2>
+        <div class="modules">
+            <div class="module"><b>CV</b><br>Face Detection</div>
+            <div class="module"><b>NLP</b><br>AI Question Answering</div>
+            <div class="module"><b>CN</b><br>Client-Server Communication</div>
+            <div class="module"><b>CC</b><br>Cloud-Ready Deployment</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>NLP Chatbot</h2>
+        <input id="question" placeholder="Ask: What is computer vision?">
+        <button onclick="askQuestion()">Ask</button>
+        <div id="chatBox">Answer will appear here.</div>
+    </div>
+
+    <div class="card">
+        <h2>Computer Vision Face Detection</h2>
+        <video id="video" autoplay playsinline></video><br><br>
+        <button onclick="startCamera()">Start Camera</button>
+        <button onclick="detectFace()">Detect Faces</button>
+        <div id="result">Camera not started.</div>
+    </div>
+
+</div>
+
+<script>
+let videoStream = null;
+
+async function askQuestion() {
+    const message = document.getElementById("question").value;
+
+    const response = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message})
+    });
+
+    const data = await response.json();
+    document.getElementById("chatBox").innerText = data.answer;
+}
+
+async function startCamera() {
+    try {
+        videoStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+        });
+        document.getElementById("video").srcObject = videoStream;
+        document.getElementById("result").innerText = "Camera started.";
+    } catch (error) {
+        document.getElementById("result").innerText =
+            "Camera permission was denied or unavailable.";
+    }
+}
+
+async function detectFace() {
+    if (!videoStream) {
+        document.getElementById("result").innerText =
+            "Start the camera first.";
+        return;
+    }
+
+    const video = document.getElementById("video");
+    const canvas = document.createElement("canvas");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const context = canvas.getContext("2d");
+    context.drawImage(video, 0, 0);
+
+    const blob = await new Promise(resolve =>
+        canvas.toBlob(resolve, "image/jpeg")
+    );
+
+    const formData = new FormData();
+    formData.append("image", blob, "camera.jpg");
+
+    const response = await fetch("/detect", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+        document.getElementById("result").innerText = data.error;
+    } else {
+        document.getElementById("result").innerText =
+            data.message;
+    }
+}
+</script>
+</body>
+</html>
