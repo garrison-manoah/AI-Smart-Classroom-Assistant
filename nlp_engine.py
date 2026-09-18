@@ -1,5 +1,23 @@
+import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from google import genai
+
+# ---------------------------------------------------------
+# GEMINI AI
+# ---------------------------------------------------------
+
+try:
+    gemini_client = genai.Client()
+    GEMINI_AVAILABLE = True
+except Exception:
+    gemini_client = None
+    GEMINI_AVAILABLE = False
+
+
+# ---------------------------------------------------------
+# LOCAL NLP KNOWLEDGE BASE
+# ---------------------------------------------------------
 
 questions = [
     # AI
@@ -117,6 +135,11 @@ answers = [
     "You're welcome!"
 ]
 
+
+# ---------------------------------------------------------
+# TF-IDF NLP MODEL
+# ---------------------------------------------------------
+
 vectorizer = TfidfVectorizer(
     lowercase=True,
     stop_words="english",
@@ -125,6 +148,58 @@ vectorizer = TfidfVectorizer(
 
 matrix = vectorizer.fit_transform(questions)
 
+
+# ---------------------------------------------------------
+# GEMINI FALLBACK
+# ---------------------------------------------------------
+
+def ask_gemini(user_text):
+    """Send unknown questions to Gemini."""
+
+    if not GEMINI_AVAILABLE:
+        return (
+            "I couldn't connect to Gemini right now. "
+            "Please try asking about AI, CV, NLP, CN or CC."
+        )
+
+    try:
+        prompt = f"""
+You are the AI assistant inside a BSc Artificial Intelligence
+project called AI Smart Classroom Assistant.
+
+Answer the user's question clearly and concisely.
+
+If the question is related to AI, Computer Vision, NLP,
+Computer Networks, Cloud Computing, Python or technology,
+give a helpful educational explanation.
+
+User question:
+{user_text}
+"""
+
+        response = gemini_client.models.generate_content(
+            model="gemini-3.5-flash-lite",
+            contents=prompt,
+            config={"automatic_function_calling": {"disable": True}}
+        )
+
+        if response.text:
+            return response.text.strip()
+
+        return "Gemini did not return an answer."
+
+    except Exception as e:
+        print("Gemini error:", e)
+
+        return (
+            "I couldn't get an answer from Gemini right now. "
+            "Please try again."
+        )
+
+
+# ---------------------------------------------------------
+# MAIN QUESTION FUNCTION
+# ---------------------------------------------------------
 
 def answer_question(user_text):
     user_text = user_text.strip()
@@ -138,11 +213,37 @@ def answer_question(user_text):
     best_index = scores.argmax()
     best_score = scores[best_index]
 
-    if best_score < 0.12:
-        return (
-            "I don't have an answer for that yet. "
-            "Try asking about AI, CV, NLP, CN, CC, "
-            "face detection, the project or its technologies."
-        )
+    project_keywords = [
+        "ai",
+        "artificial intelligence",
+        "computer vision",
+        "opencv",
+        "face",
+        "detection",
+        "nlp",
+        "natural language",
+        "chatbot",
+        "tf-idf",
+        "text",
+        "network",
+        "networking",
+        "tcp",
+        "socket",
+        "client",
+        "server",
+        "cloud",
+        "deployment",
+        "flask",
+        "python",
+        "project",
+    ]
 
-    return answers[best_index]
+    is_project_question = any(
+        re.search(rf"\b{re.escape(keyword)}\b", user_text.lower())
+        for keyword in project_keywords
+    )
+
+    if best_score >= 0.25 and is_project_question:
+        return answers[best_index]
+
+    return ask_gemini(user_text)
