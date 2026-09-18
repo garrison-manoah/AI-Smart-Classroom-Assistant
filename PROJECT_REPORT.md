@@ -1,90 +1,194 @@
-# AI SMART CLASSROOM ASSISTANT
+AI SMART CLASSROOM ASSISTANT
 
-## 1. Abstract
+1. Abstract
 
-The AI Smart Classroom Assistant is a web-based artificial intelligence project that combines Computer Vision, Natural Language Processing, Computer Networks and Cloud Computing. The system provides an interactive classroom assistant through a browser. The Computer Vision module uses OpenCV to detect faces from a webcam frame. The Natural Language Processing module uses TF-IDF vectorization and cosine similarity to identify the most relevant answer for a user's question. The Computer Networks module demonstrates TCP client-server communication by sending activity logs to a network server. The Cloud Computing component makes the application container-ready using Docker so that it can be deployed on a cloud platform.
+The AI Smart Classroom Assistant is a web-based artificial intelligence application that combines Computer Vision, Natural Language Processing, Computer Networks and Cloud Computing into a single system.
 
-## 2. Objectives
+The Computer Vision module uses OpenCV to detect faces from a webcam image. The Natural Language Processing module uses TF-IDF vectorization and cosine similarity to identify relevant answers from a predefined knowledge base. When a suitable local answer is not available, the system can use the Gemini API to generate an educational response.
 
-- Build a simple AI-based classroom assistant.
-- Demonstrate Computer Vision using face detection.
-- Demonstrate NLP using question matching.
-- Demonstrate Computer Networking using TCP sockets.
-- Demonstrate Cloud Computing using containerized deployment.
-- Provide a single web interface for demonstration.
+The Computer Networks module demonstrates TCP client-server communication by sending application activity information to a network server. The Cloud Computing component makes the application container-ready using Docker and provides configuration for cloud deployment.
 
-## 3. Technologies Used
+The system provides all these features through a single web-based interface.
 
-- Python
-- Flask
-- OpenCV
-- NumPy
-- Scikit-learn
-- HTML
-- CSS
-- JavaScript
-- TCP sockets
-- Docker
-- Cloud deployment configuration
+⸻
 
-## 4. Modules
+2. Objectives
 
-### 4.1 Computer Vision
+* Develop an AI-based classroom assistant.
+* Demonstrate Computer Vision using face detection.
+* Demonstrate Natural Language Processing using question matching.
+* Demonstrate generative AI using Gemini as an NLP fallback.
+* Demonstrate Computer Networking using TCP sockets.
+* Demonstrate Cloud Computing using Docker and cloud deployment configuration.
+* Provide an integrated web interface for demonstration.
 
-The CV module receives an image from the browser camera. OpenCV converts the image to grayscale and uses a Haar Cascade classifier to detect faces. The number of detected faces is returned to the web interface.
+⸻
 
-### 4.2 Natural Language Processing
+3. Technologies Used
 
-The NLP module contains a small knowledge base of questions and answers. TF-IDF converts the questions into numerical vectors. Cosine similarity compares the user's question with the stored questions. The answer associated with the most similar question is returned.
+* Programming Language: Python
+* Web Framework: Flask
+* Computer Vision: OpenCV
+* Numerical Processing: NumPy
+* Machine Learning / NLP: Scikit-learn
+* NLP Techniques: TF-IDF and Cosine Similarity
+* Generative AI: Google Gemini API
+* Frontend: HTML, CSS and JavaScript
+* Networking: Python TCP Sockets
+* Containerization: Docker
+* Cloud Configuration: Render
+* Version Control: Git and GitHub
 
-### 4.3 Computer Networks
+⸻
 
-The web application acts as a TCP client when it sends a chat or CV event to the network server. The network server listens on port 5050 and displays received messages. This demonstrates basic client-server communication.
+4. System Modules
 
-### 4.4 Cloud Computing
+4.1 Computer Vision
 
-The application is packaged using Docker. The Dockerfile installs the Python dependencies and starts the Flask application using Gunicorn. This makes the application suitable for deployment to a cloud service that supports Docker containers.
+The Computer Vision module receives an image from the browser camera.
 
-## 5. System Architecture
+OpenCV processes the image by converting it to grayscale and applying a Haar Cascade classifier to detect faces. The number of detected faces is then returned to the web interface.
 
-Browser
-  |
-  v
-Flask Application
-  |
-  +--> CV Module --> OpenCV
-  |
-  +--> NLP Module --> TF-IDF + Cosine Similarity
-  |
-  +--> CN Module --> TCP Server
-  |
-  +--> Docker --> Cloud Platform
+The module demonstrates the basic concept of computer vision-based object detection.
 
-## 6. Advantages
+⸻
 
-- Combines four academic subjects in one project.
-- Easy browser-based demonstration.
-- Uses commonly available open-source technologies.
-- Can be extended with a larger NLP dataset.
-- Can be extended with object detection and attendance features.
+4.2 Natural Language Processing
 
-## 7. Limitations
+The NLP module contains a predefined knowledge base of questions and answers related to Artificial Intelligence, Computer Vision, NLP, Computer Networks, Cloud Computing and the project.
 
-- The NLP knowledge base is small.
-- Face detection is not the same as identifying a person's identity.
-- The TCP server is intended as an educational networking demonstration.
-- Cloud deployment requires a cloud account and platform configuration.
+TF-IDF vectorization converts the stored questions and the user’s question into numerical representations. Cosine similarity is then used to determine how closely the user’s question matches the stored questions.
 
-## 8. Future Enhancements
+If a suitable local answer is found, the corresponding predefined answer is returned.
 
-- Add a larger question-answer dataset.
-- Add database storage.
-- Add teacher/student dashboards.
-- Add object detection.
-- Add authentication.
-- Add real cloud database integration.
-- Add analytics and charts.
+If the question does not have a suitable local match, the system can use the Gemini API to generate a response.
 
-## 9. Conclusion
+The basic NLP flow is:
 
-The AI Smart Classroom Assistant demonstrates how different areas of BSc Artificial Intelligence can be combined into one practical application. Computer Vision handles visual input, NLP handles natural-language questions, Computer Networks handles communication, and Cloud Computing provides a path for remote deployment. The project therefore provides a compact demonstration of CV, NLP, CN and CC concepts in a single system.
+User Question
+      |
+      v
+TF-IDF + Cosine Similarity
+      |
+      v
+Suitable Local Match?
+    /       \
+  YES        NO
+   |          |
+   v          v
+Local      Gemini AI
+Answer     Response
+
+⸻
+
+4.3 Computer Networks
+
+The Computer Networks module demonstrates basic client-server communication using TCP sockets.
+
+The web application acts as a TCP client when it sends chat or Computer Vision activity information. The network server listens for incoming connections on port 5050 and displays the received messages.
+
+This demonstrates fundamental networking concepts such as:
+
+* Client-server architecture
+* TCP communication
+* Socket programming
+* Data transmission between applications
+
+⸻
+
+4.4 Cloud Computing
+
+The application includes Docker configuration for containerization.
+
+The Dockerfile installs the required Python dependencies and runs the Flask application using Gunicorn. The project also contains a render.yaml configuration file for cloud deployment.
+
+This provides a path for running the application on a remote cloud server rather than only on a local computer.
+
+⸻
+
+5. System Architecture
+
+                         USER
+                          |
+                          v
+                 +------------------+
+                 |   Web Interface  |
+                 |   HTML/CSS/JS    |
+                 +--------+---------+
+                          |
+                          v
+                 +------------------+
+                 |  Flask Web App   |
+                 +--------+---------+
+                          |
+          +---------------+----------------+
+          |               |                |
+          v               v                v
+   +-------------+ +-------------+ +-------------+
+   |     CV      | |     NLP     | |     CN      |
+   |   OpenCV    | | TF-IDF +    | | TCP Socket  |
+   | Face Detect | | Cosine      | | Client      |
+   +-------------+ | Similarity  | +------+------+
+                   +------+------+        |
+                          |               v
+                          v        +-------------+
+                   +-------------+  | TCP Server  |
+                   |  Gemini AI  |  +-------------+
+                   |  Fallback   |
+                   +-------------+
+                          |
+                          v
+                 +------------------+
+                 | Docker / Cloud   |
+                 |   Deployment     |
+                 +------------------+
+
+⸻
+
+6. Advantages
+
+* Integrates four major academic areas into one application.
+* Provides a simple browser-based interface.
+* Uses widely available open-source technologies.
+* Combines traditional NLP with generative AI.
+* Provides a practical demonstration of TCP client-server communication.
+* Supports container-based deployment.
+* Can be extended with additional AI and classroom features.
+
+⸻
+
+7. Limitations
+
+* The local NLP knowledge base is limited.
+* Gemini responses depend on API availability and configuration.
+* Face detection detects faces but does not identify a person’s identity.
+* The TCP server is primarily intended as an educational networking demonstration.
+* Cloud deployment requires appropriate cloud-platform configuration.
+* Webcam functionality requires browser camera permission.
+
+⸻
+
+8. Future Enhancements
+
+The project can be extended with:
+
+* A larger question-answer dataset.
+* Database integration.
+* Teacher and student dashboards.
+* Object detection.
+* Attendance management.
+* User authentication.
+* Cloud database integration.
+* Analytics and visualization.
+* Voice-based interaction.
+* More advanced classroom monitoring features.
+
+⸻
+
+9. Conclusion
+
+The AI Smart Classroom Assistant demonstrates how Computer Vision, Natural Language Processing, Computer Networks and Cloud Computing can be integrated into a single practical application.
+
+Computer Vision processes visual information from a webcam, while the NLP module processes user questions using TF-IDF and cosine similarity with Gemini AI as a fallback. The Computer Networks module demonstrates TCP-based communication, and the Cloud Computing component provides containerization and deployment configuration.
+
+The project therefore provides a compact and practical demonstration of multiple AI and computer science concepts within one web-based system.
