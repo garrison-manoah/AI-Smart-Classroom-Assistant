@@ -41,6 +41,7 @@ questions = [
     "define NLP",
     "explain natural language processing",
     "how does the chatbot work",
+    "where can NLP be used",
 
     # Computer Networks
     "what is computer networking",
@@ -99,6 +100,7 @@ answers = [
     "NLP is a field of AI that enables computers to process and understand human language.",
     "Natural Language Processing helps computers work with human language in text or speech.",
     "The chatbot uses TF-IDF vectorization and cosine similarity to find the most relevant answer.",
+    "NLP can be used in chatbots and virtual assistants, machine translation, sentiment analysis, spam detection, text summarization, speech recognition, search engines, recommendation systems, and document analysis.",
 
     # CN
     "Computer Networking connects devices so that they can exchange data. This project uses a client-server connection for communication.",
